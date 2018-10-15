@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SensorConfigurations>
+    <Sensor>
+        <Name>Sensor 1</Name>
+        <Type>Temperature Sensor</Type>
+        <Sescription>Temperatur Sensor 1</Sescription>
+        <SensorConnection>I2C</SensorConnection>
+        <HardwareID>0xAA</HardwareID>
+    </Sensor>
+    <Sensor>
+        <Name>Sensor 2</Name>
+        <Type>Temperature Sensor</Type>
+        <Description>Temperatur Sensor 2</Description>
+        <SensorConnection>WIRE_1</SensorConnection>
+        <HardwareID>28-0000075547d6</HardwareID>
+    </Sensor>
+</SensorConfigurations>
