@@ -14,6 +14,6 @@ public class InMemoryCache {
     private List<Sensor> sensors = new ArrayList<>();
 
     public void addAllSensors(List<Sensor> sensors) {
-        sensors.addAll(sensors);
+        this.sensors.addAll(sensors);
     }
 }

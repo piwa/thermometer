@@ -1,9 +1,14 @@
 package at.piwa.thermometer.sensor.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import org.joda.time.DateTime;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -12,10 +17,12 @@ import java.util.UUID;
 @Data
 public class Temperature {
 
-    private final String TemperatureID = UUID.randomUUID().toString();
+    private final String temperatureID = UUID.randomUUID().toString();
 
     private DateTime time;
 
+    @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+    @JsonIdentityReference(alwaysAsId=true)
     private Sensor sensor;
 
     private double temperature;

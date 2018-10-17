@@ -24,14 +24,15 @@ public class MqttClient {
     private String awsIotClientEndpoint;
     @Value("${aws.iot.client.id}")
     private String awsIotClientId;
+
     @Value("${aws.iot.bus.topic.name}")
     private String awsIotBusTopicName;
 
     public void sendTemperature(Temperature temperature) {
         AWSIotMqttClient mqttClient = null;
         try {
-
             mqttClient = new AWSIotMqttClient(awsIotClientEndpoint, awsIotClientId, credProvider.getCredentials().getAWSAccessKeyId(), credProvider.getCredentials().getAWSSecretKey());
+
             mqttClient.connect();
 
             ObjectMapper objectMapper = new ObjectMapper();

@@ -5,6 +5,7 @@ import at.piwa.thermometer.sensor.MqttClient;
 import at.piwa.thermometer.sensor.domain.Sensor;
 import at.piwa.thermometer.sensor.domain.SensorConnection;
 import at.piwa.thermometer.sensor.domain.Temperature;
+import com.amazonaws.auth.AWSCredentialsProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +38,8 @@ public class ReadeTemperatureTask {
         }
     }
 
-    @Scheduled(initialDelay = 10, fixedRate = 3600000)
+
+    @Scheduled(initialDelay = 1000, fixedRate = 3600000)
     public void readTemperatureTask() {
 
         for (Sensor sensor : inMemoryCache.getSensors()) {

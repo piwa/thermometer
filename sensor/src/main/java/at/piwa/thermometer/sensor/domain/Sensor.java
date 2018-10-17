@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import java.util.UUID;
 
 /**
  * Created by philippwaibel on 18/01/16.
@@ -12,6 +13,9 @@ import javax.xml.bind.annotation.XmlElement;
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Sensor {
+
+    @XmlElement(required = false)
+    private String id = UUID.randomUUID().toString();
 
     @XmlElement(name = "Name")
     private final String name;
