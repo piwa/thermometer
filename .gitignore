@@ -24,3 +24,6 @@ hs_err_pid*
 sensor/.mvn
 sensor/src/main/resources/aws-configuration.properties
 web-ui/.mvn
+sensor-hardware/.mvn
+sensor-service/.mvn
+aws-configuration.properties
