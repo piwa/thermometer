@@ -39,7 +39,7 @@ public class ReadeTemperatureTask {
     }
 
 
-    @Scheduled(initialDelay = 1000, fixedRate = 3600000)
+    @Scheduled(initialDelay = 120000, fixedRate = 3600000)
     public void readTemperatureTask() {
         for (Sensor sensor : inMemoryCache.getSensors()) {
             Temperature temperature = null;

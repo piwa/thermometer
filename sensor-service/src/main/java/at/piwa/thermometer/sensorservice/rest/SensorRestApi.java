@@ -31,6 +31,7 @@ public class SensorRestApi {
 
     @PutMapping(value = "/sensor/register")
     public Sensor registerSensor(@RequestBody Sensor sensor) {
+        // TODO what happens if the sensor.ID already exists but from another sensor? Is this possible?
         return sensorDBServices.registerSensor(sensor);
     }
 
