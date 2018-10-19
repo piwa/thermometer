@@ -31,13 +31,9 @@ public class SensorsReaderImpl {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance( SensorConfigurations.class );
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-
-            File file;
-            URL sensorConfigurationUrl = this.getClass().getClassLoader().getResource(sensorConfigurationsPath);
-            if(sensorConfigurationUrl != null) {
-                file = Paths.get(sensorConfigurationUrl.toURI()).toFile();
-            }
-            else {
+            
+            File file = new File(sensorConfigurationsPath);
+            if(!file.exists()) {
                 file = Paths.get(this.getClass().getClassLoader().getResource(sensorConfigurationsOriginalPath).toURI()).toFile();
             }
 

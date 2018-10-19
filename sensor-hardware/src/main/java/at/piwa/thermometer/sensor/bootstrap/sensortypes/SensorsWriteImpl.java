@@ -40,7 +40,6 @@ public class SensorsWriteImpl {
                 file.createNewFile();
             }
 
-
             jaxbMarshaller.marshal(sensorConfigurations, file);
 
         } catch (JAXBException | IOException e) {
