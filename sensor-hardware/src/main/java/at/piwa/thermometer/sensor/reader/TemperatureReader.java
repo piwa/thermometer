@@ -8,6 +8,4 @@ import at.piwa.thermometer.sensor.domain.Temperature;
  */
 public interface TemperatureReader {
     Temperature readTemperature(Sensor sensor);
-
-    void init();
 }

@@ -5,12 +5,14 @@ import at.piwa.thermometer.sensor.MqttClient;
 import at.piwa.thermometer.sensor.domain.Sensor;
 import at.piwa.thermometer.sensor.domain.SensorConnection;
 import at.piwa.thermometer.sensor.domain.Temperature;
-import com.amazonaws.auth.AWSCredentialsProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by philippwaibel on 19/01/16.
@@ -41,6 +43,8 @@ public class ReadeTemperatureTask {
 
     @Scheduled(initialDelay = 120000, fixedRate = 3600000)
     public void readTemperatureTask() {
+        log.info("Read Temperatures");
+        List<Temperature> temperatureList = new ArrayList<>();
         for (Sensor sensor : inMemoryCache.getSensors()) {
             Temperature temperature = null;
             if (sensor.getSensorConnection() == SensorConnection.I2C) {
@@ -50,8 +54,14 @@ public class ReadeTemperatureTask {
             }
 
             if(temperature != null) {
-                mqttClient.sendTemperature(temperature);
+                temperatureList.add(temperature);
             }
         }
+
+        if(temperatureList.size() > 0) {
+            mqttClient.sendTemperature(temperatureList);
+        }
+
+        log.info("Read Temperatures Done");
     }
 }

@@ -3,14 +3,14 @@
     <Sensor>
         <Name>Sensor 1</Name>
         <Type>Temperature Sensor</Type>
-        <Description>Temperature Sensor 1</Description>
+        <Description>Simulated Temperature Sensor on Mac</Description>
         <SensorConnection>I2C</SensorConnection>
-        <HardwareID>0xAA</HardwareID>
+        <HardwareID>0x48</HardwareID>
     </Sensor>
     <Sensor>
         <Name>Sensor 2</Name>
         <Type>Temperature Sensor</Type>
-        <Description>Temperature Sensor 2</Description>
+        <Description>Simulated Temperature Sensor on Mac</Description>
         <SensorConnection>WIRE_1</SensorConnection>
         <HardwareID>28-0000075547d6</HardwareID>
     </Sensor>

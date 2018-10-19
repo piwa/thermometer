@@ -6,6 +6,8 @@ import at.piwa.thermometer.sensor.bootstrap.sensortypes.SensorsReaderImpl;
 import at.piwa.thermometer.sensor.bootstrap.sensortypes.SensorsWriteImpl;
 import at.piwa.thermometer.sensor.connectors.SensorServiceConnector;
 import at.piwa.thermometer.sensor.domain.Sensor;
+import at.piwa.thermometer.sensor.domain.SensorConnection;
+import at.piwa.thermometer.sensor.reader.I2cReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -44,6 +46,7 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
             sensorConfiguration.setId(sensor.getId());
             inMemoryCache.addSensor(sensorConfiguration);
+
         }
 
         SensorConfigurations newSensorConfigurations = new SensorConfigurations(inMemoryCache.getSensors());

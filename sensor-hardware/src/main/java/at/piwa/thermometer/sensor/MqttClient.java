@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @Slf4j
 public class MqttClient {
@@ -28,32 +30,73 @@ public class MqttClient {
     @Value("${aws.iot.bus.topic.name}")
     private String awsIotBusTopicName;
 
-    public void sendTemperature(Temperature temperature) {
-        AWSIotMqttClient mqttClient = null;
-        try {
-            mqttClient = new AWSIotMqttClient(awsIotClientEndpoint, awsIotClientId, credProvider.getCredentials().getAWSAccessKeyId(), credProvider.getCredentials().getAWSSecretKey());
+    private AWSIotMqttClient mqttClient;
 
-            mqttClient.connect();
+    public void sendTemperature(List<Temperature> temperatures) {
+
+        try {
+            log.debug("Send temperature start");
+            openMqttConnection();
+
+            for (Temperature temperature : temperatures) {
+                try {
+                    log.debug("Send temperature: " + temperature);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    objectMapper.registerModule(new JodaModule());
+                    String payload = objectMapper.writeValueAsString(temperature);
+
+                    mqttClient.publish(awsIotBusTopicName, AWSIotQos.QOS0, payload);
+                    log.debug("Send temperature done: " + temperature);
+                } catch (JsonProcessingException e) {
+                    log.error("Exception", e);
+                }
+            }
+
+            log.debug("Send temperature done");
+
+        } catch (AWSIotException e) {
+            log.error("Exception", e);
+        }
+        finally {
+            closeMqttConnection();
+        }
+    }
+
+    public void sendTemperature(Temperature temperature) {
+        try {
+            log.debug("Send temperature reading start: " + temperature);
+
+            openMqttConnection();
 
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JodaModule());
             String payload = objectMapper.writeValueAsString(temperature);
 
             mqttClient.publish(awsIotBusTopicName, AWSIotQos.QOS0, payload);
-            log.info("Send temperature reading: " + temperature);
+            log.debug("Send temperature reading done: " + temperature);
 
         } catch (JsonProcessingException | AWSIotException e) {
             log.error("Exception", e);
         }
         finally {
-            if(mqttClient != null) {
-                try {
-                    mqttClient.disconnect();
-                } catch (AWSIotException e) {
-                    log.error("Exception", e);
-                }
+            closeMqttConnection();
+        }
+    }
+
+    private void closeMqttConnection() {
+        if(mqttClient != null) {
+            try {
+                mqttClient.disconnect();
+            } catch (AWSIotException e) {
+                log.error("Exception", e);
             }
         }
     }
+
+    private void openMqttConnection() throws AWSIotException {
+        mqttClient = new AWSIotMqttClient(awsIotClientEndpoint, awsIotClientId, credProvider.getCredentials().getAWSAccessKeyId(), credProvider.getCredentials().getAWSSecretKey());
+        mqttClient.connect();
+    }
+
 
 }
