@@ -54,7 +54,7 @@ public class W1Reader implements TemperatureReader {
                         } else if (line.matches(".*t=[0-9]+") && crcOK) {
                             double value = Integer.valueOf(line.substring(line.indexOf("=") + 1)) / 1000.0;
                             temp.setTemperature(value);
-                            log.info("Sensor: " + sensor.toString() + "; Temperature: " + value);
+                            log.info("Read temperature: " + temp);
                             return temp;
                         }
                     }

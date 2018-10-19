@@ -35,7 +35,7 @@ public class MqttClient {
     public void sendTemperature(List<Temperature> temperatures) {
 
         try {
-            log.debug("Send temperature start");
+            log.debug("Send all temperatures start");
             openMqttConnection();
 
             for (Temperature temperature : temperatures) {
@@ -46,36 +46,15 @@ public class MqttClient {
                     String payload = objectMapper.writeValueAsString(temperature);
 
                     mqttClient.publish(awsIotBusTopicName, AWSIotQos.QOS0, payload);
-                    log.debug("Send temperature done: " + temperature);
+                    log.debug("Send temperature done");
                 } catch (JsonProcessingException e) {
                     log.error("Exception", e);
                 }
             }
 
-            log.debug("Send temperature done");
+            log.debug("Send all temperatures done");
 
         } catch (AWSIotException e) {
-            log.error("Exception", e);
-        }
-        finally {
-            closeMqttConnection();
-        }
-    }
-
-    public void sendTemperature(Temperature temperature) {
-        try {
-            log.debug("Send temperature reading start: " + temperature);
-
-            openMqttConnection();
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JodaModule());
-            String payload = objectMapper.writeValueAsString(temperature);
-
-            mqttClient.publish(awsIotBusTopicName, AWSIotQos.QOS0, payload);
-            log.debug("Send temperature reading done: " + temperature);
-
-        } catch (JsonProcessingException | AWSIotException e) {
             log.error("Exception", e);
         }
         finally {
