@@ -10,7 +10,12 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -28,10 +33,17 @@ public class SensorsWriteImpl {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance( SensorConfigurations.class );
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            File file = Paths.get(this.getClass().getClassLoader().getResource(sensorConfigurationsPath).toURI()).toFile();
+
+            File file = new File(sensorConfigurationsPath);
+
+            if(!file.exists()) {
+                file.createNewFile();
+            }
+
+
             jaxbMarshaller.marshal(sensorConfigurations, file);
 
-        } catch (JAXBException | URISyntaxException e) {
+        } catch (JAXBException | IOException e) {
             log.error("Exception", e);
         }
     }

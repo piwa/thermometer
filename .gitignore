@@ -27,3 +27,4 @@ web-ui/.mvn
 sensor-hardware/.mvn
 sensor-service/.mvn
 aws-configuration.properties
+sensorconfigurations.xml
