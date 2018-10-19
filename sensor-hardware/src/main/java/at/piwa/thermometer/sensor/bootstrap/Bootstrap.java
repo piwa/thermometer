@@ -1,7 +1,9 @@
 package at.piwa.thermometer.sensor.bootstrap;
 
 import at.piwa.thermometer.sensor.InMemoryCache;
+import at.piwa.thermometer.sensor.bootstrap.sensortypes.SensorConfigurations;
 import at.piwa.thermometer.sensor.bootstrap.sensortypes.SensorsReaderImpl;
+import at.piwa.thermometer.sensor.bootstrap.sensortypes.SensorsWriteImpl;
 import at.piwa.thermometer.sensor.connectors.SensorServiceConnector;
 import at.piwa.thermometer.sensor.domain.Sensor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,8 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
     @Autowired
     private SensorsReaderImpl sensorsReader;
     @Autowired
+    private SensorsWriteImpl sensorsWrite;
+    @Autowired
     private InMemoryCache inMemoryCache;
     @Autowired
     private SensorServiceConnector sensorServiceConnector;
@@ -41,6 +45,9 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
             sensorConfiguration.setId(sensor.getId());
             inMemoryCache.addSensor(sensorConfiguration);
         }
+
+        SensorConfigurations newSensorConfigurations = new SensorConfigurations(inMemoryCache.getSensors());
+        sensorsWrite.writeSensorConfigurations(newSensorConfigurations);
 
     }
 }
