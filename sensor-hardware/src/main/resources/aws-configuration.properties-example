@@ -1,4 +1,5 @@
-aws.username =
 aws.iot.client.endpoint =
 aws.iot.client.id =
 aws.iot.bus.topic.name =
+
+connector.sensor.service.url =

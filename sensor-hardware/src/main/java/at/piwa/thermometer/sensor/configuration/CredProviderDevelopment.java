@@ -9,11 +9,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CredProviderDevelopment {
 
-    @Value("${aws.username}")
-    protected String awsUsername;
-
     @Bean
     AWSCredentialsProvider credProvider() {
-        return new ProfileCredentialsProvider(awsUsername);
+        return new ProfileCredentialsProvider();
     }
 }

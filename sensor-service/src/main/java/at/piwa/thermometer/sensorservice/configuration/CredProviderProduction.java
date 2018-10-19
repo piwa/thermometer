@@ -1,6 +1,7 @@
 package at.piwa.thermometer.sensorservice.configuration;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.ContainerCredentialsProvider;
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,6 @@ public class CredProviderProduction {
 
     @Bean
     public AWSCredentialsProvider credProvider() {
-        return InstanceProfileCredentialsProvider.getInstance();
+        return new ContainerCredentialsProvider();
     }
 }
