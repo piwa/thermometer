@@ -25,10 +25,10 @@ public class I2cReader implements TemperatureReader {
     @Value("${thermometer.simulation}")
     private boolean simulation;
 
-    private static final byte START_CONVERT_CMD  = (byte)0xEE;
-    private static final byte READ_TEMP_CMD      = (byte)0xAA;
-    private static final byte COUNT_PER_C_CMD    = (byte)0xA9;
-    private static final byte COUNT_REMAIN_CMD   = (byte)0xA8;
+    private static final byte START_CONVERT_CMD = (byte) 0xEE;
+    private static final byte READ_TEMP_CMD = (byte) 0xAA;
+    private static final byte COUNT_PER_C_CMD = (byte) 0xA9;
+    private static final byte COUNT_REMAIN_CMD = (byte) 0xA8;
 
     public I2cReader() {
     }
@@ -36,7 +36,8 @@ public class I2cReader implements TemperatureReader {
     public Temperature readTemperature(Sensor sensor) {
         Temperature temp = new Temperature();
 
-        if(!simulation) {
+        log.debug("Read I2C sensor: " + sensor);
+        if (!simulation) {
             try {
 
                 init(sensor);
@@ -75,44 +76,40 @@ public class I2cReader implements TemperatureReader {
                     log.info("Sensor: " + sensor.toString() + "; Temperature: " + temp);
                 }
 
-            } catch (IOException e) {
-                log.error("Exception", e);
-            }
-            finally {
-                if(bus != null) {
+            } catch (IOException | I2CFactory.UnsupportedBusNumberException | InterruptedException e) {
+                log.error("Exception while reading I2C temperature", e);
+            } finally {
+                if (bus != null) {
                     try {
                         bus.close();
                     } catch (IOException e) {
-                        log.error("Exception", e);
+                        log.error("Exception while closing I2C connection", e);
                     }
                 }
             }
 
-        }
-
-        else {
+        } else {
             temp = SimulationUtilities.createSimulationTemperature(sensor);
         }
 
+        log.debug("Read I2C sensor done: " + sensor);
         return temp;
     }
 
 
-    public void init(Sensor sensor) {
-        try {
-            // create I2C communications bus instance
-            bus = I2CFactory.getInstance(I2CBus.BUS_1);
-            log.debug(bus.toString());
+    public void init(Sensor sensor) throws IOException, I2CFactory.UnsupportedBusNumberException, InterruptedException {
+        // create I2C communications bus instance
+        log.debug("Open I2C connection to sensor: " + sensor);
+        bus = I2CFactory.getInstance(I2CBus.BUS_1);
 
-            // create I2C device instance
-            device = bus.getDevice(Integer.valueOf(sensor.getHardwareID()));
+        // create I2C device instance
+        log.debug("Create I2C device instance: " + bus.toString());
+        device = bus.getDevice(Integer.parseInt(sensor.getHardwareID()));
 
-            // Start Conversion
-            device.write(START_CONVERT_CMD);
-            Thread.sleep(100);
-
-        } catch (Exception e) {
-            log.error("Exception", e);
-        }
+        // Start Conversion
+        log.debug("Start I2C conversation: " + bus.toString());
+        device.write(START_CONVERT_CMD);
+        Thread.sleep(100);
+        log.debug("I2C connection to sensor open: " + sensor);
     }
 }

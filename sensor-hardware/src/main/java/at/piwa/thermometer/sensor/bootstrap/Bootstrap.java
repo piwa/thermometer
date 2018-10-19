@@ -42,11 +42,11 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
         List<Sensor> sensorConfigurations = sensorsReader.readSensorConfigurations();
 
         for (Sensor sensorConfiguration : sensorConfigurations) {
+            log.debug("Try to register sensor: " + sensorConfiguration.toString());
             Sensor sensor = sensorServiceConnector.registerSensor(sensorConfiguration);
-
             sensorConfiguration.setId(sensor.getId());
             inMemoryCache.addSensor(sensorConfiguration);
-
+            log.debug("Sensor registered: " + sensorConfiguration.toString());
         }
 
         SensorConfigurations newSensorConfigurations = new SensorConfigurations(inMemoryCache.getSensors());

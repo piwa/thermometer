@@ -32,6 +32,8 @@ public class W1Reader implements TemperatureReader {
 
     public Temperature readTemperature(Sensor sensor) {
 
+        log.debug("Read Wire-1 sensor: " + sensor);
+
         Temperature temp = new Temperature();
         temp.setTime(DateTime.now());
         temp.setSensor(sensor);
@@ -68,6 +70,7 @@ public class W1Reader implements TemperatureReader {
             temp = SimulationUtilities.createSimulationTemperature(sensor);
         }
 
+        log.debug("Read Wire-1 sensor done: " + sensor);
         return temp;
     }
 }
