@@ -46,7 +46,7 @@ public class ReadeTemperatureTask {
                 temperature = w1Reader.readTemperature(sensor);
             }
 
-            log.info("Read temperature: " + temperature);
+            log.info("New temperature reading: " + temperature);
 
             if(temperature != null) {
                 temperatureList.add(temperature);
