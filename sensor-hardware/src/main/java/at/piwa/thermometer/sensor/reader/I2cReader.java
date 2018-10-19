@@ -44,15 +44,6 @@ public class I2cReader implements TemperatureReader {
 
                 device.write(READ_TEMP_CMD);
 
-//                byte[] readBuf = new byte[2];
-//                device.read(readBuf, 0, 2);
-
-//                double temperatureValue = Double.valueOf(readBuf[0]).doubleValue();
-
-//                if (readBuf[1] != 0) {
-//                    temperatureValue = temperatureValue + 0.5;
-//                }
-
                 byte[] results = new byte[2];
                 int bytesRead = device.read(results, 0, 2);
                 if (bytesRead == 2) {
@@ -73,7 +64,6 @@ public class I2cReader implements TemperatureReader {
                     temp.setTime(DateTime.now());
                     temp.setTemperature(temperatureValue);
                     temp.setSensor(sensor);
-                    log.info("Read temperature: " + temp);
                 }
 
             } catch (IOException | I2CFactory.UnsupportedBusNumberException | InterruptedException e) {

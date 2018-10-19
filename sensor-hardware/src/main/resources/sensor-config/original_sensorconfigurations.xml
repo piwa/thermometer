@@ -2,15 +2,15 @@
 <SensorConfigurations>
     <Sensor>
         <Name>Sensor 1</Name>
-        <Type>Temperature Sensor</Type>
-        <Description>Simulated Temperature Sensor on Mac</Description>
+        <Type>I2C Temperature Sensor</Type>
+        <Description>I2C Temperature Sensor on RaspberryPi</Description>
         <SensorConnection>I2C</SensorConnection>
         <HardwareID>0x48</HardwareID>
     </Sensor>
     <Sensor>
         <Name>Sensor 2</Name>
-        <Type>Temperature Sensor</Type>
-        <Description>Simulated Temperature Sensor on Mac</Description>
+        <Type>Wire 1 Temperature Sensor</Type>
+        <Description>Wire 1 Temperature Sensor on RaspberryPi</Description>
         <SensorConnection>WIRE_1</SensorConnection>
         <HardwareID>28-0000075547d6</HardwareID>
     </Sensor>

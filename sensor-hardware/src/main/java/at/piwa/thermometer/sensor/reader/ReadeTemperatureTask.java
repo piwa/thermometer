@@ -34,7 +34,7 @@ public class ReadeTemperatureTask {
     private boolean simulation;
 
 
-    @Scheduled(initialDelay = 120000, fixedRate = 3600000)
+    @Scheduled(fixedRateString = "${temperature.read.task.interval}")
     public void readTemperatureTask() {
         log.info("Read Temperatures");
         List<Temperature> temperatureList = new ArrayList<>();
@@ -45,6 +45,8 @@ public class ReadeTemperatureTask {
             } else if (sensor.getSensorConnection() == SensorConnection.WIRE_1) {
                 temperature = w1Reader.readTemperature(sensor);
             }
+
+            log.info("Read temperature: " + temperature);
 
             if(temperature != null) {
                 temperatureList.add(temperature);

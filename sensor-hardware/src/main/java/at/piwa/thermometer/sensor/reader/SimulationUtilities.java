@@ -23,8 +23,6 @@ public class SimulationUtilities {
         temp.setTemperature(randomNum);
         temp.setSensor(sensor);
 
-        log.info("Simulation: Sensor: " + sensor.toString() + "; Temperature: " + temp);
-
         return temp;
     }
 

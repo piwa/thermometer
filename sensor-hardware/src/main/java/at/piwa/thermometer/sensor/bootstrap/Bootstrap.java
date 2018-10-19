@@ -8,6 +8,7 @@ import at.piwa.thermometer.sensor.connectors.SensorServiceConnector;
 import at.piwa.thermometer.sensor.domain.Sensor;
 import at.piwa.thermometer.sensor.domain.SensorConnection;
 import at.piwa.thermometer.sensor.reader.I2cReader;
+import at.piwa.thermometer.sensor.reader.ReadeTemperatureTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -35,6 +36,8 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
     private InMemoryCache inMemoryCache;
     @Autowired
     private SensorServiceConnector sensorServiceConnector;
+    @Autowired
+    private ReadeTemperatureTask readeTemperatureTask;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -51,6 +54,8 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
         SensorConfigurations newSensorConfigurations = new SensorConfigurations(inMemoryCache.getSensors());
         sensorsWrite.writeSensorConfigurations(newSensorConfigurations);
+
+        readeTemperatureTask.readTemperatureTask();
 
     }
 }
