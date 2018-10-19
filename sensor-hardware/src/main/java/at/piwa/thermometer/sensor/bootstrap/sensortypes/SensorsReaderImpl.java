@@ -1,11 +1,9 @@
 package at.piwa.thermometer.sensor.bootstrap.sensortypes;
 
 import at.piwa.thermometer.sensor.domain.Sensor;
-import com.sun.javafx.scene.shape.PathUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.FileSystemUtils;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
