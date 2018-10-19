@@ -33,14 +33,7 @@ public class ReadeTemperatureTask {
     @Value("${thermometer.simulation}")
     private boolean simulation;
 
-    public void init() {
-        if (!simulation) {
-            i2cReader.init();
-            w1Reader.init();
-        }
-    }
-
-
+    
     @Scheduled(initialDelay = 120000, fixedRate = 3600000)
     public void readTemperatureTask() {
         log.info("Read Temperatures");
