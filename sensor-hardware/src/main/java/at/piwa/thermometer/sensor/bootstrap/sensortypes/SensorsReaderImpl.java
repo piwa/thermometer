@@ -10,6 +10,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -30,8 +32,12 @@ public class SensorsReaderImpl {
             JAXBContext jaxbContext = JAXBContext.newInstance( SensorConfigurations.class );
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 
-            File file = Paths.get(this.getClass().getClassLoader().getResource(sensorConfigurationsPath).toURI()).toFile();
-            if(!file.exists()) {
+            File file;
+            URL sensorConfigurationUrl = this.getClass().getClassLoader().getResource(sensorConfigurationsPath);
+            if(sensorConfigurationUrl != null) {
+                file = Paths.get(sensorConfigurationUrl.toURI()).toFile();
+            }
+            else {
                 file = Paths.get(this.getClass().getClassLoader().getResource(sensorConfigurationsOriginalPath).toURI()).toFile();
             }
 
