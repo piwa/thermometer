@@ -104,7 +104,7 @@ public class I2cReader implements TemperatureReader {
 
         // create I2C device instance
         log.debug("Create I2C device instance: " + bus.toString());
-        device = bus.getDevice(Integer.parseInt(sensor.getHardwareID()));
+        device = bus.getDevice(Integer.decode(sensor.getHardwareID()));
 
         // Start Conversion
         log.debug("Start I2C conversation: " + bus.toString());
