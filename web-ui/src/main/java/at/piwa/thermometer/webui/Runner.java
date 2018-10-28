@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Component
@@ -25,7 +26,9 @@ public class Runner implements CommandLineRunner {
 
             List<Temperature> temperatures = temperatureServices.findAll();
 
-            Page<Temperature> pagingTemperatures = temperatureServices.findAll(PageRequest.of(0,2));
+            temperatures.sort(Comparator.comparing(Temperature::getTime));
+
+//            Page<Temperature> pagingTemperatures = temperatureServices.findAll(PageRequest.of(0,2));
 
             temperatures.forEach(temperatureDto -> log.info(temperatureDto.toString()));
         } catch (Exception e) {

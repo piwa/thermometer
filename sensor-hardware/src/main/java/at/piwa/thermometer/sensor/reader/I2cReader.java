@@ -40,8 +40,6 @@ public class I2cReader implements TemperatureReader {
         if (!simulation) {
             try {
 
-                init(sensor);
-
                 device.write(READ_TEMP_CMD);
 
                 byte[] results = new byte[2];
@@ -66,16 +64,16 @@ public class I2cReader implements TemperatureReader {
                     temp.setSensor(sensor);
                 }
 
-            } catch (IOException | I2CFactory.UnsupportedBusNumberException | InterruptedException e) {
+            } catch (IOException e) {
                 log.error("Exception while reading I2C temperature", e);
             } finally {
-                if (bus != null) {
-                    try {
-                        bus.close();
-                    } catch (IOException e) {
-                        log.error("Exception while closing I2C connection", e);
-                    }
-                }
+//                if (bus != null) {
+//                    try {
+//                        bus.close();
+//                    } catch (IOException e) {
+//                        log.error("Exception while closing I2C connection", e);
+//                    }
+//                }
             }
 
         } else {
