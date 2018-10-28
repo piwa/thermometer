@@ -99,7 +99,7 @@ public class I2cReader implements TemperatureReader {
         // Start Conversion
         log.debug("Start I2C conversation: " + bus.toString());
         device.write(START_CONVERT_CMD);
-        Thread.sleep(100);
+        Thread.sleep(1000);
         log.debug("I2C connection to sensor open: " + sensor);
     }
 }

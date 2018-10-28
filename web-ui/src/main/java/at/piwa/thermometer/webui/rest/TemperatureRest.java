@@ -4,6 +4,7 @@ import at.piwa.thermometer.webui.database.Temperature;
 import at.piwa.thermometer.webui.database.TemperatureServices;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
+@Slf4j
 public class TemperatureRest {
 
 
@@ -22,50 +24,57 @@ public class TemperatureRest {
 
     @Setter
     @Getter
-    private class Row{
+    private class Row {
         private List<String> column;
     }
 
-
+    // TODO improve this function
     @RequestMapping("/rest/temperatures/all")
     public String getAllTemperatures() {
 
         List<Temperature> temperatureList = temperatureService.findAll();
+        temperatureList.sort(Comparator.comparing(Temperature::getTime));
 
         Set<String> sensorIds = temperatureList.stream().map(Temperature::getSensorId).collect(Collectors.toSet());
 
-        Map<String,List<Temperature>> sensorTemperatureMap = new HashMap<>();
+        Map<String, List<Temperature>> sensorTemperatureMap = new HashMap<>();
         for (String sensorId : sensorIds) {
             List<Temperature> sensorTemperature = temperatureList.stream().filter(temperature -> temperature.getSensorId().equals(sensorId)).collect(Collectors.toList());
             sensorTemperatureMap.put(sensorId, sensorTemperature);
         }
 
-        List<PolynomialSplineFunction> splineFunctions = new ArrayList<>();
+        String firstSensorId = sensorIds.stream().findFirst().orElse("");   // TODO
+        List<Temperature> firstSensorTemperatures = sensorTemperatureMap.get(firstSensorId);
+
+        Map<String, PolynomialSplineFunction> splineFunctionMap = new HashMap<>();
         for (Map.Entry<String, List<Temperature>> stringListEntry : sensorTemperatureMap.entrySet()) {
-
             double[] sensor2Temp = stringListEntry.getValue().stream().mapToDouble(Temperature::getTemperature).toArray();
-            double[] sensor2Time = stringListEntry.getValue().stream().mapToDouble(temperature -> (double)temperature.getTime().getMillis()).toArray();
-
+            double[] sensor2Time = stringListEntry.getValue().stream().mapToDouble(temperature -> (double) temperature.getTime().getMillis()).toArray();
             SplineInterpolator splineInterpolatorSensor2 = new SplineInterpolator();
             PolynomialSplineFunction splineFunction = splineInterpolatorSensor2.interpolate(sensor2Time, sensor2Temp);
-            splineFunctions.add(splineFunction);
-
+            splineFunctionMap.put(stringListEntry.getKey(), splineFunction);
         }
-        splineFunctions.remove(0);
 
-
+        splineFunctionMap.remove(firstSensorId);
         List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
-        for (Temperature sensor1Entry : temperatureList) {
-            TimeSeriesDto dtoEntry = new TimeSeriesDto();
-            dtoEntry.setTime(sensor1Entry.getTime());
-            dtoEntry.getTemperatureList().add(sensor1Entry.getTemperature());
+        for (Temperature firstSensorTemperature : firstSensorTemperatures) {
+            try {
+                TimeSeriesDto dtoEntry = new TimeSeriesDto();
+                dtoEntry.setTime(firstSensorTemperature.getTime());
+                dtoEntry.getTemperatureList().add(firstSensorTemperature.getTemperature());
 
-            for (PolynomialSplineFunction splineFunction : splineFunctions) {
-                double sensorInterpolateTemp = splineFunction.value(sensor1Entry.getTime().getMillis());
-                dtoEntry.getTemperatureList().add(sensorInterpolateTemp);
+                for (Map.Entry<String, PolynomialSplineFunction> splineFunctionEntrySet : splineFunctionMap.entrySet()) {
+                    double sensorInterpolateTemp = splineFunctionEntrySet.getValue().value(firstSensorTemperature.getTime().getMillis());
+                    if (sensorInterpolateTemp < 0) {
+                        dtoEntry.getTemperatureList().add(0.0);
+                    }
+                    dtoEntry.getTemperatureList().add(sensorInterpolateTemp);
+                }
+
+                timeSeriesDtoList.add(dtoEntry);
+            } catch (Exception e) {
+                log.error("Exception", e);      // TODO
             }
-
-            timeSeriesDtoList.add(dtoEntry);
         }
 
         return createCsvDocument(timeSeriesDtoList);
