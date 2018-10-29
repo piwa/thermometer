@@ -40,29 +40,19 @@ public class I2cReader implements TemperatureReader {
         if (!simulation) {
             try {
 
-                device.write(READ_TEMP_CMD);
+                byte[] readBuf = new byte[2];
+                device.read(0xAA, readBuf, 0, 2);
 
-                byte[] results = new byte[2];
-                int bytesRead = device.read(results, 0, 2);
-                if (bytesRead == 2) {
-                    double temperatureValue = 0;
-                    int temperature = 0x7F & results[0];
-                    int tempSign = 0x80 & results[0];
-                    if (tempSign != 0) {
-                        temperature = temperature - 128;
-                    }
-                    if (results[1] != 0) {
-                        temperatureValue = temperature + 0.5;
-                    }
-                    if (temperatureValue <= -55) {
-                        // TODO redoo?
-                    }
+                double temperatureValue = Double.valueOf(readBuf[0]).doubleValue();
 
-                    temp = new Temperature();
-                    temp.setTime(DateTime.now());
-                    temp.setTemperature(temperatureValue);
-                    temp.setSensor(sensor);
+                if (readBuf[1] != 0) {
+                    temperatureValue = temperatureValue + 0.5;
                 }
+
+                temp = new Temperature();
+                temp.setTime(DateTime.now());
+                temp.setTemperature(temperatureValue);
+                temp.setSensor(sensor);
 
             } catch (IOException e) {
                 log.error("Exception while reading I2C temperature", e);

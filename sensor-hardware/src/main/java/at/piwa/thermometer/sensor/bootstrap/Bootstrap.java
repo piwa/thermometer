@@ -60,7 +60,7 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
                     i2cReader.init(sensor);
                 } catch (IOException | I2CFactory.UnsupportedBusNumberException | InterruptedException e) {
                     log.error("Exception while initializing the I2C sensor");
-                } 
+                }
             }
         }
 
