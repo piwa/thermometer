@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SensorConfigurations>
+<!--
     <Sensor>
         <Name>Sensor 1</Name>
         <Type>I2C Temperature Sensor</Type>
@@ -7,11 +8,12 @@
         <SensorConnection>I2C</SensorConnection>
         <HardwareID>0x48</HardwareID>
     </Sensor>
+-->
     <Sensor>
-        <Name>Sensor 2</Name>
+        <Name>Büro</Name>
         <Type>Wire 1 Temperature Sensor</Type>
         <Description>Wire 1 Temperature Sensor on RaspberryPi</Description>
         <SensorConnection>WIRE_1</SensorConnection>
         <HardwareID>28-0000075547d6</HardwareID>
     </Sensor>
-</SensorConfigurations>
+</SensorConfigurations>s
