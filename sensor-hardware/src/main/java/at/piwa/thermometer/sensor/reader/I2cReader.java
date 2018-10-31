@@ -7,7 +7,6 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -22,9 +21,6 @@ public class I2cReader implements TemperatureReader {
     private I2CBus bus;
     private I2CDevice device;
 
-    @Value("${thermometer.simulation}")
-    private boolean simulation;
-
     private static final byte START_CONVERT_CMD = (byte) 0xEE;
     private static final byte READ_TEMP_CMD = (byte) 0xAA;
     private static final byte COUNT_PER_C_CMD = (byte) 0xA9;
@@ -37,26 +33,25 @@ public class I2cReader implements TemperatureReader {
         Temperature temp = new Temperature();
 
         log.debug("Read I2C sensor: " + sensor);
-        if (!simulation) {
-            try {
+        try {
 
-                byte[] readBuf = new byte[2];
-                device.read(0xAA, readBuf, 0, 2);
+            byte[] readBuf = new byte[2];
+            device.read(0xAA, readBuf, 0, 2);
 
-                double temperatureValue = Double.valueOf(readBuf[0]).doubleValue();
+            double temperatureValue = Double.valueOf(readBuf[0]).doubleValue();
 
-                if (readBuf[1] != 0) {
-                    temperatureValue = temperatureValue + 0.5;
-                }
+            if (readBuf[1] != 0) {
+                temperatureValue = temperatureValue + 0.5;
+            }
 
-                temp = new Temperature();
-                temp.setTime(DateTime.now());
-                temp.setTemperature(temperatureValue);
-                temp.setSensor(sensor);
+            temp = new Temperature();
+            temp.setTime(DateTime.now());
+            temp.setTemperature(temperatureValue);
+            temp.setSensor(sensor);
 
-            } catch (IOException e) {
-                log.error("Exception while reading I2C temperature", e);
-            } finally {
+        } catch (IOException e) {
+            log.error("Exception while reading I2C temperature", e);
+        } finally {
 //                if (bus != null) {
 //                    try {
 //                        bus.close();
@@ -64,10 +59,6 @@ public class I2cReader implements TemperatureReader {
 //                        log.error("Exception while closing I2C connection", e);
 //                    }
 //                }
-            }
-
-        } else {
-            temp = SimulationUtilities.createSimulationTemperature(sensor);
         }
 
         log.debug("Read I2C sensor done: " + sensor);

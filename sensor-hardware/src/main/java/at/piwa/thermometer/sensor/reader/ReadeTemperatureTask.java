@@ -30,9 +30,6 @@ public class ReadeTemperatureTask {
     @Autowired
     private MqttClient mqttClient;
 
-    @Value("${thermometer.simulation}")
-    private boolean simulation;
-
 
     @Scheduled(fixedRateString = "${temperature.read.task.interval}")
     public void readTemperatureTask() {

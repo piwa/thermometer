@@ -1,4 +1,4 @@
-package at.piwa.thermometer.sensor.reader;
+package at.piwa.thermometer.sensor.reader.simulation;
 
 import at.piwa.thermometer.sensor.domain.Sensor;
 import at.piwa.thermometer.sensor.domain.Temperature;
@@ -13,7 +13,6 @@ public class SimulationUtilities {
     public static Temperature createSimulationTemperature(Sensor sensor) {
         int min = 20;
         int max = 26;
-
 
         Temperature temp = new Temperature();
 
