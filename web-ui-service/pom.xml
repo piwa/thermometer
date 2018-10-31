@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>at.piwa.thermometer</groupId>
-	<artifactId>web-ui</artifactId>
+	<artifactId>web-ui-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>Web UI</name>
-	<description>Webside of the Thermometer</description>
+	<name>Web UI Service</name>
+	<description>Website of the Thermometer</description>
 
     <parent>
     	<groupId>at.piwa</groupId>

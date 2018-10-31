@@ -10,7 +10,7 @@
     </Sensor>
 -->
     <Sensor>
-        <Name>Büro</Name>
+        <Name>Office</Name>
         <Type>Wire 1 Temperature Sensor</Type>
         <Description>Wire 1 Temperature Sensor on RaspberryPi</Description>
         <SensorConnection>WIRE_1</SensorConnection>

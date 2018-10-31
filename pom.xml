@@ -18,7 +18,7 @@
     <modules>
         <module>sensor-hardware</module>
         <module>sensor-service</module>
-        <module>web-ui</module>
+        <module>web-ui-service</module>
     </modules>
     
     <properties>
