@@ -37,7 +37,7 @@ public class DynamoDBConfiguration {
 
     @Bean
     public AmazonDynamoDB amazonDynamoDB() {
-        return AmazonDynamoDBClientBuilder.standard().withCredentials(credentialsProvider).withRegion(Regions.US_WEST_2).build();
+        return AmazonDynamoDBClientBuilder.standard().withCredentials(credentialsProvider).withRegion(Regions.EU_CENTRAL_1).build();
     }
 
 }
