@@ -30,3 +30,4 @@ aws-configuration.properties
 sensorconfigurations.xml
 sensor_configurations.xml
 sensor_hardware.log*
+temperature-service/.mvn

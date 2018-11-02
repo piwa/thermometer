@@ -18,6 +18,7 @@
     <modules>
         <module>sensor-hardware</module>
         <module>sensor-service</module>
+        <module>temperature-service</module>
         <module>web-ui-service</module>
     </modules>
     

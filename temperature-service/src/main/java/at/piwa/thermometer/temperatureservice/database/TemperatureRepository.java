@@ -1,9 +1,6 @@
-package at.piwa.thermometer.webui.database;
+package at.piwa.thermometer.temperatureservice.database;
 
 import org.socialsignin.spring.data.dynamodb.repository.EnableScan;
-import org.socialsignin.spring.data.dynamodb.repository.EnableScanCount;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
 @EnableScan

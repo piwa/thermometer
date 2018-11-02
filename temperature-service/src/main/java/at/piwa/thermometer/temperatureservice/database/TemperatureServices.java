@@ -1,4 +1,4 @@
-package at.piwa.thermometer.webui.database;
+package at.piwa.thermometer.temperatureservice.database;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

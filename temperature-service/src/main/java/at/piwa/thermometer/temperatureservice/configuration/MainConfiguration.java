@@ -1,4 +1,4 @@
-package at.piwa.thermometer.webui.configuration;
+package at.piwa.thermometer.temperatureservice.configuration;
 
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
@@ -11,10 +11,10 @@ import org.springframework.context.annotation.PropertySources;
 @Configuration
 @EnableAutoConfiguration
 @PropertySources({
-        @PropertySource("classpath:application.properties")
+        @PropertySource("classpath:application.properties"),
+        @PropertySource("classpath:aws-configuration.properties")
 })
 public class MainConfiguration {
-
 
     @Bean
     public Module jodaModule() {

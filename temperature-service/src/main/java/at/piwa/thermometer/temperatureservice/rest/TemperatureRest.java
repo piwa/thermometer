@@ -1,7 +1,7 @@
-package at.piwa.thermometer.webui.rest;
+package at.piwa.thermometer.temperatureservice.rest;
 
-import at.piwa.thermometer.webui.database.Temperature;
-import at.piwa.thermometer.webui.database.TemperatureServices;
+import at.piwa.thermometer.temperatureservice.database.Temperature;
+import at.piwa.thermometer.temperatureservice.database.TemperatureServices;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,8 @@ public class TemperatureRest {
     @Autowired
     private TemperatureServices temperatureService;
 
+    private static DecimalFormat df2 = new DecimalFormat(".##");
+
     @Setter
     @Getter
     private class Row {
@@ -30,7 +33,7 @@ public class TemperatureRest {
 
     // TODO improve this function
     @RequestMapping("/rest/temperatures/all")
-    public String getAllTemperatures() {
+    public List<TimeSeriesDto> getAllTemperatures() {
 
         List<Temperature> temperatureList = temperatureService.findAll();
         temperatureList.sort(Comparator.comparing(Temperature::getTime));
@@ -59,35 +62,34 @@ public class TemperatureRest {
         List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
         for (Temperature firstSensorTemperature : firstSensorTemperatures) {
             try {
-                TimeSeriesDto dtoEntry = new TimeSeriesDto();
-                dtoEntry.setTime(firstSensorTemperature.getTime());
-                dtoEntry.getTemperatureList().add(firstSensorTemperature.getTemperature());
+                TimeSeriesDto timeSeriesDto = new TimeSeriesDto();
+                timeSeriesDto.setTime(firstSensorTemperature.getTime());
+
+                double temperature = Double.valueOf(df2.format(firstSensorTemperature.getTemperature()));
+                TimeSeriesDto.TemperatureDto temperatureDto = new TimeSeriesDto.TemperatureDto(firstSensorTemperature.getSensorId(), temperature);
+
+                timeSeriesDto.getTemperatureList().add(temperatureDto);
 
                 for (Map.Entry<String, PolynomialSplineFunction> splineFunctionEntrySet : splineFunctionMap.entrySet()) {
                     double sensorInterpolateTemp = splineFunctionEntrySet.getValue().value(firstSensorTemperature.getTime().getMillis());
+                    sensorInterpolateTemp = Double.valueOf(df2.format(sensorInterpolateTemp));
+                    TimeSeriesDto.TemperatureDto tempDto;
                     if (sensorInterpolateTemp < 0) {
-                        dtoEntry.getTemperatureList().add(0.0);
+                        tempDto = new TimeSeriesDto.TemperatureDto(splineFunctionEntrySet.getKey(), 0.0);
                     }
-                    dtoEntry.getTemperatureList().add(sensorInterpolateTemp);
+                    else {
+                        tempDto = new TimeSeriesDto.TemperatureDto(splineFunctionEntrySet.getKey(), sensorInterpolateTemp);
+                    }
+                    timeSeriesDto.getTemperatureList().add(tempDto);
                 }
 
-                timeSeriesDtoList.add(dtoEntry);
+                timeSeriesDtoList.add(timeSeriesDto);
             } catch (Exception e) {
                 log.error("Exception", e);      // TODO
             }
         }
 
-        return createCsvDocument(timeSeriesDtoList);
-
-
-    }
-
-    private String createCsvDocument(List<TimeSeriesDto> timeSeriesDtoList) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("DateTime").append(",").append("Sensor 1").append(",").append("Sensor 2").append("\n");
-        timeSeriesDtoList.forEach(timeSeriesDto -> builder.append(timeSeriesDto.getTime().toString()).append(",").append(timeSeriesDto.getTemperatureList().get(0)).append(",").append(timeSeriesDto.getTemperatureList().get(1)).append("\n"));
-
-        return builder.toString();
+        return timeSeriesDtoList;
     }
 
 }

@@ -1,7 +1,5 @@
-package at.piwa.thermometer.webui.database;
+package at.piwa.thermometer.temperatureservice.database;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.joda.time.DateTime;
 
