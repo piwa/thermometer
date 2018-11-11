@@ -38,6 +38,8 @@ public class I2cReader implements TemperatureReader {
             byte[] readBuf = new byte[2];
             device.read(0xAA, readBuf, 0, 2);
 
+            log.debug("Bytes received from I2C: "+ new String(readBuf));
+
             double temperatureValue = convertTemperature(readBuf);
 
             temp = new Temperature();
