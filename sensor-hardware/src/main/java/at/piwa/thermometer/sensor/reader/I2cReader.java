@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Created by philippwaibel on 19/06/16.
@@ -38,7 +39,7 @@ public class I2cReader implements TemperatureReader {
             byte[] readBuf = new byte[2];
             device.read(0xAA, readBuf, 0, 2);
 
-            log.debug("Bytes received from I2C: "+ new String(readBuf));
+            log.debug("Bytes received from I2C: "+ Arrays.toString(readBuf));
 
             double temperatureValue = convertTemperature(readBuf);
 
