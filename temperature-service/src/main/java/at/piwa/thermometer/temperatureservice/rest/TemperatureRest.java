@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +39,19 @@ public class TemperatureRest {
         List<Temperature> temperatureList = temperatureService.findAll();
         temperatureList.sort(Comparator.comparing(Temperature::getTime));
 
+        Temperature firstMeasuredTemperature = temperatureList.stream().min(Comparator.comparing(Temperature::getTime)).orElseThrow(NoSuchElementException::new);
+        Temperature lastMeasuredTemperature = temperatureList.stream().max(Comparator.comparing(Temperature::getTime)).orElseThrow(NoSuchElementException::new);
+
+        List<DateTime> measurePoints = new ArrayList<>();
+        measurePoints.add(firstMeasuredTemperature.getTime());
+        DateTime currentStepTime = firstMeasuredTemperature.getTime().withSecondOfMinute(0).withMinuteOfHour(0);
+        while(currentStepTime.isBefore(lastMeasuredTemperature.getTime())) {
+            currentStepTime = currentStepTime.plusHours(1);
+            measurePoints.add(currentStepTime);
+        }
+        measurePoints.add(lastMeasuredTemperature.getTime());
+
+
         Set<String> sensorIds = temperatureList.stream().map(Temperature::getSensorId).collect(Collectors.toSet());
 
         Map<String, List<Temperature>> sensorTemperatureMap = new HashMap<>();
@@ -46,8 +60,8 @@ public class TemperatureRest {
             sensorTemperatureMap.put(sensorId, sensorTemperature);
         }
 
-        String firstSensorId = sensorIds.stream().findFirst().orElse("");   // TODO
-        List<Temperature> firstSensorTemperatures = sensorTemperatureMap.get(firstSensorId);
+//        String firstSensorId = sensorIds.stream().findFirst().orElse("");   // TODO
+//        List<Temperature> firstSensorTemperatures = sensorTemperatureMap.get(firstSensorId);
 
         Map<String, PolynomialSplineFunction> splineFunctionMap = new HashMap<>();
         for (Map.Entry<String, List<Temperature>> stringListEntry : sensorTemperatureMap.entrySet()) {
@@ -58,20 +72,20 @@ public class TemperatureRest {
             splineFunctionMap.put(stringListEntry.getKey(), splineFunction);
         }
 
-        splineFunctionMap.remove(firstSensorId);
+//        splineFunctionMap.remove(firstSensorId);
         List<TimeSeriesDto> timeSeriesDtoList = new ArrayList<>();
-        for (Temperature firstSensorTemperature : firstSensorTemperatures) {
+        for (DateTime currentStepDateTime : measurePoints) {
             try {
                 TimeSeriesDto timeSeriesDto = new TimeSeriesDto();
-                timeSeriesDto.setTime(firstSensorTemperature.getTime());
+                timeSeriesDto.setTime(currentStepDateTime);
 
-                double temperature = Double.valueOf(df2.format(firstSensorTemperature.getTemperature()));
-                TimeSeriesDto.TemperatureDto temperatureDto = new TimeSeriesDto.TemperatureDto(firstSensorTemperature.getSensorId(), temperature);
+//                double temperature = Double.valueOf(df2.format(firstSensorTemperature.getTemperature()));
+//                TimeSeriesDto.TemperatureDto temperatureDto = new TimeSeriesDto.TemperatureDto(firstSensorTemperature.getSensorId(), temperature);
 
-                timeSeriesDto.getTemperatureList().add(temperatureDto);
+//                timeSeriesDto.getTemperatureList().add(temperatureDto);
 
                 for (Map.Entry<String, PolynomialSplineFunction> splineFunctionEntrySet : splineFunctionMap.entrySet()) {
-                    double sensorInterpolateTemp = splineFunctionEntrySet.getValue().value(firstSensorTemperature.getTime().getMillis());
+                    double sensorInterpolateTemp = splineFunctionEntrySet.getValue().value(currentStepDateTime.getMillis());
                     sensorInterpolateTemp = Double.valueOf(df2.format(sensorInterpolateTemp));
                     TimeSeriesDto.TemperatureDto tempDto;
                     if (sensorInterpolateTemp < 0) {

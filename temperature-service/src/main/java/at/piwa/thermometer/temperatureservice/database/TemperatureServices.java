@@ -20,12 +20,12 @@ public class TemperatureServices {
 
     public List<Temperature> findAll() {
         Iterable<TemperatureDto> temperatureDTOs = temperatureRepository.findAll();
-        return StreamSupport.stream(temperatureDTOs.spliterator(), false).map(dto -> new Temperature(dto)).collect(Collectors.toList());
+        return StreamSupport.stream(temperatureDTOs.spliterator(), false).map(dto -> new Temperature(dto)).collect(Collectors.toList());    // TODO use ModelMapper? (http://modelmapper.org/getting-started/)
     }
 
     public Page<Temperature> findAll(Pageable pageable) {
         Page<TemperatureDto> temperatureDTOs = pagingTemperatureRepository.findAll(pageable);
-        List<Temperature> elements = StreamSupport.stream(temperatureDTOs.spliterator(), false).map(dto -> new Temperature(dto)).collect(Collectors.toList());
+        List<Temperature> elements = StreamSupport.stream(temperatureDTOs.spliterator(), false).map(dto -> new Temperature(dto)).collect(Collectors.toList());    // TODO use ModelMapper? (http://modelmapper.org/getting-started/)
         return new PageImpl<>(elements, temperatureDTOs.getPageable(), temperatureDTOs.getTotalElements());
     }
 

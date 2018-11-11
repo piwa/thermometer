@@ -38,11 +38,7 @@ public class I2cReader implements TemperatureReader {
             byte[] readBuf = new byte[2];
             device.read(0xAA, readBuf, 0, 2);
 
-            double temperatureValue = Double.valueOf(readBuf[0]).doubleValue();
-
-            if (readBuf[1] != 0) {
-                temperatureValue = temperatureValue + 0.5;
-            }
+            double temperatureValue = convertTemperature(readBuf);
 
             temp = new Temperature();
             temp.setTime(DateTime.now());
@@ -51,20 +47,25 @@ public class I2cReader implements TemperatureReader {
 
         } catch (IOException e) {
             log.error("Exception while reading I2C temperature", e);
-        } finally {
-//                if (bus != null) {
-//                    try {
-//                        bus.close();
-//                    } catch (IOException e) {
-//                        log.error("Exception while closing I2C connection", e);
-//                    }
-//                }
         }
 
         log.debug("Read I2C sensor done: " + sensor);
         return temp;
     }
 
+    private double convertTemperature(byte[] readBuf) {
+        int temperatureValue_h = readBuf[0];
+        int temperatureValue_l = readBuf[1] >> 3;
+
+        double temperatureValue = temperatureValue_h + (0.03125 * temperatureValue_l);
+
+        int tempSign = 0x80 & readBuf[1];
+        if (tempSign != 0) {
+            temperatureValue = temperatureValue + 1;
+        }
+
+        return temperatureValue;
+    }
 
     public void init(Sensor sensor) throws IOException, I2CFactory.UnsupportedBusNumberException, InterruptedException {
         // create I2C communications bus instance
