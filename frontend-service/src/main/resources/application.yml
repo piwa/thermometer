@@ -1,0 +1,53 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev,dev_ide
+  thymeleaf:
+    cache: false
+
+connector:
+  temperature:
+    service:
+      url: http://temperature-service:8080/rest/temperatures/all
+  sensor:
+    service:
+      url: http://sensor-service:8080/sensor/all
+
+
+---
+spring:
+  profiles: dev_docker_compose
+
+connector:
+  temperature:
+    service:
+      url: http://temperature-service:8080/rest/temperatures/all
+  sensor:
+    service:
+      url: http://sensor-service:8080/sensor/all
+
+---
+spring:
+  profiles: dev_kubernetes
+
+connector:
+  temperature:
+    service:
+      url: http://thermometer-temperature:8080/rest/temperatures/all
+  sensor:
+    service:
+      url: http://thermometer-sensor:8080/sensor/all
+
+---
+spring:
+  profiles: dev_ide
+
+connector:
+  temperature:
+    service:
+      url: http://127.0.0.1:8082/rest/temperatures/all
+  sensor:
+    service:
+      url: http://127.0.0.1:8081/sensor/all

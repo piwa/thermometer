@@ -19,9 +19,6 @@ public class DynamoDBConfiguration {
     @Autowired
     private AWSCredentialsProvider credentialsProvider;
 
-    @Value("${amazon.dynamodb.endpoint}")
-    private String dBEndpoint;
-
     @Bean
     public DynamoDBMapperConfig dynamoDBMapperConfig() {
         return DynamoDBMapperConfig.DEFAULT;

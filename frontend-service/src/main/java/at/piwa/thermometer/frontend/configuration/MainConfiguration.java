@@ -1,4 +1,4 @@
-package at.piwa.thermometer.temperatureservice.configuration;
+package at.piwa.thermometer.frontend.configuration;
 
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
@@ -14,6 +14,7 @@ import org.springframework.context.annotation.PropertySources;
         @PropertySource("classpath:application.yml")
 })
 public class MainConfiguration {
+
 
     @Bean
     public Module jodaModule() {

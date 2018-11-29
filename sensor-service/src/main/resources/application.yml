@@ -1,0 +1,31 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev,dev_ide
+
+aws:
+  credential:
+    path: /run/secrets/
+
+---
+spring:
+  profiles: dev_docker_compose
+
+server:
+  port: 8080
+
+---
+spring:
+  profiles: dev_kubernetes
+
+server:
+  port: 8080
+
+---
+spring:
+  profiles: dev_ide
+
+server:
+  port: 8081

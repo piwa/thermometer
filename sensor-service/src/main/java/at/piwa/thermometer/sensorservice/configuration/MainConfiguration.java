@@ -8,8 +8,7 @@ import org.springframework.context.annotation.PropertySources;
 @Configuration
 @EnableAutoConfiguration
 @PropertySources({
-        @PropertySource("classpath:application.properties"),
-        @PropertySource("classpath:aws-configuration.properties")
+        @PropertySource("classpath:application.yml")
 })
 public class MainConfiguration {
 

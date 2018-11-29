@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: thermometer-frontend
+    labels:
+        app: thermometer
+spec:
+    selector:
+        matchLabels:
+            app: thermometer
+            tier: frontend-service
+    replicas: 1
+    template:   
+        metadata:
+            labels:
+                app: thermometer
+                tier: frontend-service
+        spec:
+            containers:
+            - name: frontend-service
+              image: piwa/thermometer.frontend-service
+              ports:
+              - containerPort: 8080
+              env:
+              - name: SPRING_PROFILES_ACTIVE
+                value: "dev,dev_kubernetes"
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thermometer-frontend
+  labels:
+    app: thermometer
+    tier: frontend-service
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: thermometer
+    tier: frontend-service
+  type: NodePort
+  #type: LoadBalancer

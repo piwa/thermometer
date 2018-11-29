@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thermometer-sensor
+  labels:
+    app: thermometer
+spec:
+  selector:
+    matchLabels:
+      app: thermometer
+      tier: sensor-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: thermometer
+        tier: sensor-service
+    spec:
+      containers:
+        - name: sensor-service
+          image: piwa/thermometer.sensor-service
+          env:
+            - name: AWS_CREDENTIAL_PATH
+              value: "/deployment/config/"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "dev,dev_kubernetes"
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: aws-credentials
+              mountPath: "/deployment/config"
+              readOnly: true
+      volumes:
+        - name: aws-credentials
+          secret:
+            secretName: temperature-sensor-aws
+            items:
+              - key: aws_credentials
+                path: aws_credentials
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thermometer-sensor
+  labels:
+    app: thermometer
+    tier: sensor-service
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: thermometer
+    tier: sensor-service

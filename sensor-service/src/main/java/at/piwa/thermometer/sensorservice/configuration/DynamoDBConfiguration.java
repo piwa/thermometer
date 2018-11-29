@@ -19,9 +19,6 @@ public class DynamoDBConfiguration {
     @Autowired
     private AWSCredentialsProvider credentialsProvider;
 
-    @Value("${amazon.dynamodb.endpoint}")
-    private String dBEndpoint;
-
     @Bean
     public DynamoDBMapperConfig dynamoDBMapperConfig() {
         return DynamoDBMapperConfig.DEFAULT;
@@ -34,7 +31,7 @@ public class DynamoDBConfiguration {
 
     @Bean
     public AmazonDynamoDB amazonDynamoDB() {
-        return AmazonDynamoDBClientBuilder.standard().withCredentials(credentialsProvider).build();
+        return AmazonDynamoDBClientBuilder.standard().withCredentials(credentialsProvider).withRegion(Regions.EU_CENTRAL_1).build(); // TODO make the region configurable
     }
 
 }

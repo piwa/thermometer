@@ -58,16 +58,14 @@ public class I2cReader implements TemperatureReader {
 
     private double convertTemperature(byte[] readBuf) {
         int temperatureValue_h = readBuf[0];
-        int temperatureValue_l = readBuf[1] >> 3;
+        int temperatureValue_l = readBuf[1] >> 4;
 
-        double temperatureValue = temperatureValue_h + (0.03125 * temperatureValue_l);
-
-        int tempSign = 0x80 & readBuf[1];
-        if (tempSign != 0) {
-            temperatureValue = temperatureValue + 1;
+        double decimalPlace = 0.0625 * Math.abs(temperatureValue_l);
+        if(temperatureValue_l < 0) {
+            decimalPlace = 1 - decimalPlace;
         }
 
-        return temperatureValue;
+        return temperatureValue_h + decimalPlace;
     }
 
     public void init(Sensor sensor) throws IOException, I2CFactory.UnsupportedBusNumberException, InterruptedException {

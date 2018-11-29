@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>Thermometer / Temperatures</title>
+
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+<div class="page-wrap">
+    <div class="container">
+        <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+        <!--/*@thymesVar id="timeSeries" type="at.piwa.thermometer.frontend.connectors.TimeSeriesDto"*/-->
+        <!--/*@thymesVar id="timeSeriesEntry" type="at.piwa.thermometer.frontend.connectors.TimeSeriesDto"*/-->
+        <!--/*@thymesVar id="sensors" type="at.piwa.thermometer.frontend.connectors.SensorDto"*/-->
+
+        <script src="https://code.highcharts.com/stock/highstock.js"></script>
+        <script src="https://code.highcharts.com/stock/modules/data.js"></script>
+        <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
+
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+
+                <h3>Temperature Graph</h3>
+                <div id="chart1" style="min-width: 310px; height: 600px; margin: 0 auto" data-highcharts-chart="0"></div>
+
+            <table class="table table-striped" style="display:none" id="datatable">
+                <tr>
+                    <th>DateTime</th>
+                    <div th:each="sensor : ${sensors}">
+                        <th th:text="${sensor.getName()}">SensorName</th>
+                    </div>
+                </tr>
+                <tr th:each="timeSeriesEntry : ${timeSeries}">
+                    <td th:text="${timeSeriesEntry.getTime()}">Time</td>
+                    <div th:each="entry : ${timeSeriesEntry.getTemperatureList()}">
+                        <td th:text="${entry.getTemperature()}">Temperature</td>
+                    </div>
+
+                </tr>
+            </table>
+
+        </main>
+
+        <script type="text/javascript">
+            Highcharts.StockChart('chart1', {
+                data: {
+                    table: 'datatable'
+                },
+
+                plotOptions: {
+                    series: {
+                        showInNavigator: true,
+                        dataGrouping: {
+                            forced: true,
+                            units: [
+                                ['minute', [1]]
+                            ]
+                        }
+                    }
+                },
+
+                rangeSelector: {
+                    allButtonsEnabled: false,
+                    buttons: [{
+                        type: 'hour',
+                        count: 1,
+                        text: '1h'
+                    }, {
+                        type: 'day',
+                        count: 1,
+                        text: '1d'
+                    }, {
+                        type: 'week',
+                        count: 1,
+                        text: '1w'
+                    }, {
+                        type: 'year',
+                        count: 1,
+                        text: '1y'
+                    }, {
+                        type: 'all',
+                        text: 'All'
+                    }],
+                    buttonTheme: {
+                        width: 60
+                    },
+                    selected: 2
+                },
+
+
+                legend: {
+                    enabled: true
+                },
+                chart: {
+                    type: 'spline', zoomType: 'x', panning: true, pinchType: 'x'
+                },
+                title: {
+                    text: ''
+                },
+                yAxis: {
+                    allowDecimals: false,
+                    opposite: false,
+                    title: {
+                        text: 'Temperature'
+                    }
+                },
+                tooltip: {
+                    "shared": true
+                }
+            });
+        </script>
+
+
+    </div>
+
+</div>
+
+
+</body>
+</html>
