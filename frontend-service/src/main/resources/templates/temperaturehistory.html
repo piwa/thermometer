@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>Thermometer / Temperatures</title>
+
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body id="page-top">
+    <!--/*@thymesVar id="timeSeries" type="at.piwa.thermometer.frontend.connectors.TimeSeriesDto"*/-->
+    <!--/*@thymesVar id="timeSeriesEntry" type="at.piwa.thermometer.frontend.connectors.TimeSeriesDto"*/-->
+    <!--/*@thymesVar id="sensors" type="at.piwa.thermometer.frontend.connectors.SensorDto"*/-->
+    <!--/*@thymesVar id="sensor" type="at.piwa.thermometer.frontend.connectors.SensorDto"*/-->
+
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+
+    <div id="wrapper">
+        <!--/*/ <th:block th:include="fragments/sidebar :: sidebar"></th:block> /*/-->
+        <div id="content-wrapper">
+            <div class="container-fluid">
+
+                <!-- Breadcrumbs-->
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/}">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item active">History</li>
+                </ol>
+
+                <!-- Area Chart Example-->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fas fa-chart-area"></i>
+                        Temperature Graph</div>
+                    <div class="card-body">
+                        <div id="chart1" style="min-width: 310px; height: 600px; margin: 0 auto" data-highcharts-chart="0"></div>
+                    </div>
+                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                </div>
+
+                <table class="table table-striped" style="display:none" id="datatable">
+                    <tr>
+                        <th>DateTime</th>
+                        <div th:each="sensor : ${sensors}">
+                            <th th:text="${sensor.getName()}">SensorName</th>
+                        </div>
+                    </tr>
+                    <tr th:each="timeSeriesEntry : ${timeSeries}">
+                        <td th:text="${timeSeriesEntry.getTime()}">Time</td>
+                        <div th:each="entry : ${timeSeriesEntry.getTemperatureList()}">
+                            <td th:text="${entry.getTemperature()}">Temperature</td>
+                        </div>
+
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!--/*/ <th:block th:include="fragments/scrollToTopButton :: scrollToTopButton"></th:block> /*/-->
+    <!--/*/ <th:block th:include="fragments/scripts :: scripts"></th:block> /*/-->
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/data.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
+    <script type="text/javascript" th:src="@{/js/chart.js}"></script>
+
+</body>
+</html>

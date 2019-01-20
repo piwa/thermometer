@@ -18,14 +18,14 @@ import java.util.List;
  * Created by philippwaibel on 18/01/16.
  */
 @Controller
-public class TemperatureController {
+public class TemperatureHistoryController {
 
     @Autowired
     private TemperatureServiceConnector temperatureServiceConnector;
     @Autowired
     private SensorServiceConnector sensorServiceConnector;
 
-    @RequestMapping(value = "/temperatures", method = RequestMethod.GET)
+    @RequestMapping(value = "/temperaturehistory", method = RequestMethod.GET)
     public String list(Model model){
 
         List<TimeSeriesDto> timeSeriesDtoList = temperatureServiceConnector.getTemperatureTimeSeries();
@@ -41,7 +41,7 @@ public class TemperatureController {
         model.addAttribute("sensors", sensorList);
         model.addAttribute("timeSeries", timeSeriesDtoList);
 
-        return "temperatures";
+        return "temperaturehistory";
     }
 
 }

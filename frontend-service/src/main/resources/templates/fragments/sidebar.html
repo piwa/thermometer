@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+</head>
+<body>
+
+    <div class="container">
+        <div th:fragment="sidebar">
+        <!-- Sidebar -->
+        <ul class="sidebar navbar-nav">
+            <li th:class="'nav-item ' + ${dashboardActiveSettings}">
+                <a class="nav-link" th:href="@{/}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li th:class="'nav-item ' + ${temperatureActiveSettings}">
+                <a class="nav-link" th:href="@{/temperaturehistory}">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>History</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Sensors</span></a>
+            </li>
+        </ul>
+        </div>
+    </div>
+</body>
+</html>

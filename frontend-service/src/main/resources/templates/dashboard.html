@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>Thermometer</title>
+
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+
+</head>
+<body>
+
+    <!--/*@thymesVar id="timeSeries" type="at.piwa.thermometer.frontend.connectors.TimeSeriesDto"*/-->
+    <!--/*@thymesVar id="timeSeriesEntry" type="at.piwa.thermometer.frontend.connectors.TimeSeriesDto"*/-->
+    <!--/*@thymesVar id="sensors" type="at.piwa.thermometer.frontend.connectors.SensorDto"*/-->
+    <!--/*@thymesVar id="sensor" type="at.piwa.thermometer.frontend.connectors.SensorDto"*/-->
+
+    <!--/*/ <th:block th:include="fragments/header :: header"></th:block> /*/-->
+
+
+    <div id="wrapper">
+        <!--/*/ <th:block th:include="fragments/sidebar :: sidebar"></th:block> /*/-->
+        <div id="content-wrapper">
+            <div class="container-fluid">
+
+                <!-- Breadcrumbs-->
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/}">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item active">Overview</li>
+                </ol>
+
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fas fa-chart-area"></i>
+                        Current Temperatures</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div id="container-temp1" class="col-sm" style="min-width: 310px; max-width: 400px; height: 300px; margin: 0 auto"></div>
+                            <div id="container-temp2" class="col-sm" style="min-width: 310px; max-width: 400px; height: 300px; margin: 0 auto"></div>
+                        </div>
+                    </div>
+                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+    <script type="text/javascript" >
+
+
+            var gaugeOptions = {
+                chart: {
+                    type: 'gauge',
+                    plotBackgroundColor: null,
+                    plotBackgroundImage: null,
+                    plotBorderWidth: 0,
+                    plotShadow: false
+                },
+
+                title: {
+                    text: 'Temperature'
+                },
+                exporting: {
+                    enabled: false
+                },
+                credits: {
+                    enabled: false
+                },
+
+                pane: {
+                    startAngle: -150,
+                    endAngle: 150,
+                    background: [{
+                        backgroundColor: {
+                            linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
+                            stops: [
+                                [0, '#FFF'],
+                                [1, '#333']
+                            ]
+                        },
+                        borderWidth: 0,
+                        outerRadius: '109%'
+                    }, {
+                        backgroundColor: {
+                            linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
+                            stops: [
+                                [0, '#333'],
+                                [1, '#FFF']
+                            ]
+                        },
+                        borderWidth: 1,
+                        outerRadius: '107%'
+                    }, {
+                        // default background
+                    }, {
+                        backgroundColor: '#DDD',
+                        borderWidth: 0,
+                        outerRadius: '105%',
+                        innerRadius: '103%'
+                    }]
+                },
+
+                // the value axis
+                yAxis: {
+                    min: -20,
+                    max: 45,
+
+                    minorTickInterval: 'auto',
+                    minorTickWidth: 1,
+                    minorTickLength: 10,
+                    minorTickPosition: 'inside',
+                    minorTickColor: '#666',
+
+                    tickPixelInterval: 30,
+                    tickWidth: 2,
+                    tickPosition: 'inside',
+                    tickLength: 10,
+                    tickColor: '#666',
+                    labels: {
+                        step: 2,
+                        rotation: 'auto'
+                    },
+                    title: {
+                        text: '°C'
+                    },
+                    plotBands: [{
+                        from: -20,
+                        to: 0,
+                        color: '#367fbf' // blue
+                    }, {
+                        from: 0,
+                        to: 15,
+                        color: '#DDDF0D' // yellow
+                    }, {
+                        from: 15,
+                        to: 27,
+                        color: '#55BF3B' // green
+                    }, {
+                        from: 27,
+                        to: 35,
+                        color: '#DDDF0D' // yellow
+                    }, {
+                        from: 35,
+                        to: 45,
+                        color: '#DF5353' // red
+                    }]
+                },
+
+                series: [{
+                    name: 'Temperature',
+                    data: [22],
+                    tooltip: {
+                        valueSuffix: ' °C'
+                    }
+                }]
+            };
+            var chart1 = Highcharts.chart('container-temp1', gaugeOptions);
+            var chart2 = Highcharts.chart('container-temp2', gaugeOptions);
+
+
+
+//          },
+// Add some life
+//             function (chart) {
+//                 if (!chart.renderer.forExport) {
+//                     setInterval(function () {
+//                         var point = chart.series[0].points[0],
+//                             newVal,
+//                             inc = Math.round((Math.random() - 0.5) * 20);
+//
+//                         newVal = point.y + inc;
+//                         if (newVal < -50 || newVal > 50) {
+//                             newVal = point.y - inc;
+//                         }
+//
+//                         point.update(newVal);
+//
+//                     }, 3000);
+//                 }
+//             });
+
+    </script>
+
+    <!--/*/ <th:block th:include="fragments/scrollToTopButton :: scrollToTopButton"></th:block> /*/-->
+    <!--/*/ <th:block th:include="fragments/scripts :: scripts"></th:block> /*/-->
+</body>
+</html>

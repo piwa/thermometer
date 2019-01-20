@@ -10,13 +10,11 @@ import java.util.Iterator;
  * Created by philippwaibel on 17/01/16.
  */
 @Controller
-public class HomeController {
+public class DashboardController {
 
     @RequestMapping("/")
     public String home(Model model) {
-
-
-        return "home";
+        return "dashboard";
     }
 
 }

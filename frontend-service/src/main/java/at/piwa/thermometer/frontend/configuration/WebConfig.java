@@ -19,7 +19,7 @@ public class WebConfig  extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**")
+        registry.addResourceHandler("/static/**", "/js/**")
                 .addResourceLocations("/resources/", "/webjars/")
                 .setCacheControl(
                         CacheControl.maxAge(30L, TimeUnit.DAYS).cachePublic())
